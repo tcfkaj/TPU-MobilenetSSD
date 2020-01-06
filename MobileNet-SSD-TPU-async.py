@@ -55,6 +55,13 @@ def camThread(label, results, frameBuffer, camera_width, camera_height, vidfps, 
     window_name = "USB Camera"
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
 
+    # Define video writer
+    writer = cv2.VideoWriter('output.avi',
+                            cv2.VideoWriter_fourcc('M','J','P','G'), 
+                            fps=fps, 
+                            (camera_width, camera_height))
+
+    
     while True:
         t1 = time.perf_counter()
 
@@ -76,6 +83,7 @@ def camThread(label, results, frameBuffer, camera_width, camera_height, vidfps, 
             imdraw = overlay_on_image(frames, lastresults, label, camera_width, camera_height)
 
         cv2.imshow('USB Camera', imdraw)
+        writer.write(imdraw)
 
         if cv2.waitKey(1)&0xFF == ord('q'):
             break
