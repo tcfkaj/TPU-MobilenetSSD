@@ -5,8 +5,12 @@ import cv2
 import time
 from PIL import Image
 from edgetpu.detection.engine import DetectionEngine
+from pathlib import Path
 
-outfile='test.avi'
+folder = 'test'
+frame_folder = Path(folder)
+frame_folder.mkdir(exist_ok=True)
+
 
 # Function to read labels from text files.
 def ReadLabelFile(file_path):
@@ -29,6 +33,7 @@ def main():
     fps = ""
     detectfps = ""
     framecount = 0
+    realcount = 0
     detectframecount = 0
     time1 = 0
     time2 = 0
@@ -47,10 +52,10 @@ def main():
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, camera_height)
 
     # Define video writer
-    writer = cv2.VideoWriter(outfile, 
+    writer = cv2.VideoWriter(str(memory_location / memory_name) + '.avi', 
                             cv2.VideoWriter_fourcc('M','J','P','G'), 
-                            150, 
-                            (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT))
+                            30, 
+                            (camera_width, camera_height))
 
     # Initialize engine.
     engine = DetectionEngine(args.model)
@@ -101,14 +106,15 @@ def main():
 
         cv2.namedWindow('USB Camera', cv2.WINDOW_AUTOSIZE)
         cv2.imshow('USB Camera', color_image)
-        
-        writer.write(color_image)
+        frame_loc = frame_folder / (str(realcount).zfill(6) + '.jpg')
+        cv2.imwrite(str(frame_loc), color_image)
 
         if cv2.waitKey(1)&0xFF == ord('q'):
             break
 
         # FPS calculation
         framecount += 1
+        realcount += 1
         if framecount >= 15:
             fps       = "(Playback) {:.1f} FPS".format(time1/15)
             detectfps = "(Detection) {:.1f} FPS".format(detectframecount/time2)
