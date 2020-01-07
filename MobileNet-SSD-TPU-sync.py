@@ -100,7 +100,7 @@ def main():
         cv2.namedWindow('USB Camera', cv2.WINDOW_AUTOSIZE)
         cv2.imshow('USB Camera', color_image)
         frame_loc = frame_folder / (str(framecount).zfill(6) + '.jpg')
-        cv2.imwrite(str(frame_loc), imdraw)
+        cv2.imwrite(str(frame_loc), color_image)
 
         if cv2.waitKey(1)&0xFF == ord('q'):
             break
