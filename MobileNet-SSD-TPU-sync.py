@@ -51,12 +51,6 @@ def main():
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, camera_width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, camera_height)
 
-    # Define video writer
-    writer = cv2.VideoWriter(str(memory_location / memory_name) + '.avi', 
-                            cv2.VideoWriter_fourcc('M','J','P','G'), 
-                            30, 
-                            (camera_width, camera_height))
-
     # Initialize engine.
     engine = DetectionEngine(args.model)
     labels = ReadLabelFile(args.label) if args.label else None
@@ -107,7 +101,7 @@ def main():
         cv2.namedWindow('USB Camera', cv2.WINDOW_AUTOSIZE)
         cv2.imshow('USB Camera', color_image)
         frame_loc = frame_folder / (str(realcount).zfill(6) + '.jpg')
-        cv2.imwrite(str(frame_loc), color_image)
+        cv2.imwrite(str(frame_loc), color)
 
         if cv2.waitKey(1)&0xFF == ord('q'):
             break
