@@ -8,6 +8,11 @@ from time import sleep
 import multiprocessing as mp
 from edgetpu.detection.engine import DetectionEngine
 from edgetpu.basic import edgetpu_utils
+from pathlib import Path
+
+folder = 'test'
+frame_folder = Path(folder)
+frame_folder.mkdir(exist_ok=True)
 
 lastresults = None
 processes = []
@@ -54,14 +59,7 @@ def camThread(label, results, frameBuffer, camera_width, camera_height, vidfps, 
     cam.set(cv2.CAP_PROP_FRAME_HEIGHT, camera_height)
     window_name = "USB Camera"
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
-
-    # Define video writer
-    writer = cv2.VideoWriter('output.avi',
-                            cv2.VideoWriter_fourcc('M','J','P','G'), 
-                            fps=fps, 
-                            (camera_width, camera_height))
-
-    
+  
     while True:
         t1 = time.perf_counter()
 
@@ -83,7 +81,8 @@ def camThread(label, results, frameBuffer, camera_width, camera_height, vidfps, 
             imdraw = overlay_on_image(frames, lastresults, label, camera_width, camera_height)
 
         cv2.imshow('USB Camera', imdraw)
-        writer.write(imdraw)
+        frame_loc = frame_folder / str(frame_count).zfill(6) + '.jpg'
+        cv2.imwrite(str(frame_loc), imdraw)
 
         if cv2.waitKey(1)&0xFF == ord('q'):
             break
