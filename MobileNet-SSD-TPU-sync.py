@@ -5,12 +5,8 @@ import cv2
 import time
 from PIL import Image
 from edgetpu.detection.engine import DetectionEngine
-from pathlib import Path
 
-folder = 'test'
-frame_folder = Path(folder)
-frame_folder.mkdir(exist_ok=True)
-
+outfile='test.avi'
 
 # Function to read labels from text files.
 def ReadLabelFile(file_path):
@@ -49,6 +45,12 @@ def main():
     cap.set(cv2.CAP_PROP_FPS, 150)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, camera_width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, camera_height)
+
+    # Define video writer
+    writer = cv2.VideoWriter(outfile, 
+                            cv2.VideoWriter_fourcc('M','J','P','G'), 
+                            150, 
+                            (camera_width, camera_height))
 
     # Initialize engine.
     engine = DetectionEngine(args.model)
@@ -99,8 +101,8 @@ def main():
 
         cv2.namedWindow('USB Camera', cv2.WINDOW_AUTOSIZE)
         cv2.imshow('USB Camera', color_image)
-        frame_loc = frame_folder / (str(framecount).zfill(6) + '.jpg')
-        cv2.imwrite(str(frame_loc), color_image)
+        
+        writer.write(color_image)
 
         if cv2.waitKey(1)&0xFF == ord('q'):
             break
