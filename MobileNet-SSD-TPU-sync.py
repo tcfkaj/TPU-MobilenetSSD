@@ -5,6 +5,11 @@ import cv2
 import time
 from PIL import Image
 from edgetpu.detection.engine import DetectionEngine
+from pathlib import Path
+
+folder = 'test'
+frame_folder = Path(folder)
+frame_folder.mkdir(exist_ok=True)
 
 
 # Function to read labels from text files.
@@ -94,6 +99,8 @@ def main():
 
         cv2.namedWindow('USB Camera', cv2.WINDOW_AUTOSIZE)
         cv2.imshow('USB Camera', color_image)
+        frame_loc = frame_folder / (str(framecount).zfill(6) + '.jpg')
+        cv2.imwrite(str(frame_loc), imdraw)
 
         if cv2.waitKey(1)&0xFF == ord('q'):
             break
