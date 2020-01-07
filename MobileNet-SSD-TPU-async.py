@@ -81,7 +81,7 @@ def camThread(label, results, frameBuffer, camera_width, camera_height, vidfps, 
             imdraw = overlay_on_image(frames, lastresults, label, camera_width, camera_height)
 
         cv2.imshow('USB Camera', imdraw)
-        frame_loc = frame_folder / str(framecount).zfill(6) + '.jpg'
+        frame_loc = frame_folder / (str(framecount).zfill(6) + '.jpg')
         cv2.imwrite(str(frame_loc), imdraw)
 
         if cv2.waitKey(1)&0xFF == ord('q'):
