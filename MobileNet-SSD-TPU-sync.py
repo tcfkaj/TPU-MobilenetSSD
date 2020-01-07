@@ -50,7 +50,7 @@ def main():
     writer = cv2.VideoWriter(outfile, 
                             cv2.VideoWriter_fourcc('M','J','P','G'), 
                             150, 
-                            (camera_width, camera_height))
+                            (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT))
 
     # Initialize engine.
     engine = DetectionEngine(args.model)
